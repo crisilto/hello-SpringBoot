@@ -25,17 +25,17 @@ public class UserController {
     @PutMapping("/{id}") //Mapea las solicitudes HTTP PUT a updateUser(), que actualiza un usuario existente en función de su ID.
     //@PathVariable: Obtiene variables de la ruta (ej., /users/1).
     //@RequestParam: Obtiene los parámetros de la solicitud de la URL (ej., ?name=Crisilto
-    public String updateUser(@PathVariable Long id, @RequestParam String name){
+    public String updateUser(@PathVariable int id, @RequestParam String name){
         if(id >= 0 && id < users.size()){
-            users.set(id.intValue(), name);
+            users.set(id, name);
             return "Usuario: " + name + " actualizado.";
         }
         return "No se encontró el usuario con el ID: " + id;
     }
     @DeleteMapping("/{id}") //Mapea las solicitudes HTTP DELETE a deleteUser(), que elimina un usuario basado en su ID.
-    public String deleteUser(@PathVariable Long id){
+    public String deleteUser(@PathVariable int id){
         if(id >= 0 && id < users.size()){
-            String user = String.valueOf(users.remove(id));
+            String user = users.remove(id);
             return "Usuario: " + user + " eliminado.";
         }else{
             return "No se encontró el usuario con el ID: " + id;

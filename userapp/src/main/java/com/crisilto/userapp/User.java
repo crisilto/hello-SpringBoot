@@ -1,20 +1,18 @@
 package com.crisilto.userapp;
 
 public class User {
-    private Long id;
+    private int id;
     private String nombre;
-    //Constructor vacío
-    public User() {}
-    //Constructor
-    public User(Long id, String nombre) {
+    //Constructores, getters y setters
+    public User(){}
+    public User(int id, String nombre){
         this.id = id;
         this.nombre = nombre;
     }
-    //Getters y setters
-    public Long getId() {
+    public int getId() {
         return id;
     }
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
     public String getNombre() {
