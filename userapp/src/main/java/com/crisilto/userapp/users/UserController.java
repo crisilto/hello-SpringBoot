@@ -1,5 +1,6 @@
 package com.crisilto.userapp.users;
 
+import com.crisilto.userapp.ApiResponse;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -11,33 +12,34 @@ import java.util.List;
 @RequestMapping("/users")  //Mapeamos todas las rutas de /users a este controlador
 //Todas las rutas manejadas por este controlador comenzarán con /users.
 public class UserController {
-    private List<String> users = new ArrayList<>(); //Simulación de una lista de usuarios
+    private List<User> users = new ArrayList<>(); //Simulación de una lista de usuarios
     @GetMapping() //Mapea las solicitudes HTTP GET a getAllUsers(), que devuelve la lista de usuarios.
-    public List<String> getAllUsers() {
-        return users;
+    public ApiResponse<List<User>> getAllUsers() {
+        return new ApiResponse<>("success", "Usuers list obtained correctly", users);
     }
     @PostMapping //Mapea las solicitudes HTTP POST a addUser(), que añade un nuevo usuario a la lista.
-    public String addUser(@RequestParam String name){
-        users.add(name);
-        return "Usuario: " + name + " añadido.";
+    public ApiResponse<User> addUser(@RequestParam String name){
+        User user = new User(users.size(), name);
+        users.add(user);
+        return new ApiResponse<>("success", "User added successfully", user);
     }
     @PutMapping("/{id}") //Mapea las solicitudes HTTP PUT a updateUser(), que actualiza un usuario existente en función de su ID.
     //@PathVariable: Obtiene variables de la ruta (ej., /users/1).
     //@RequestParam: Obtiene los parámetros de la solicitud de la URL (ej., ?name=Crisilto
-    public String updateUser(@PathVariable int id, @RequestParam String name){
+    public ApiResponse<User> updateUser(@PathVariable int id, @RequestParam String name){
         if(id >= 0 && id < users.size()){
-            users.set(id, name);
-            return "Usuario: " + name + " actualizado.";
+            User user = users.get(id);
+            user.setName(name);
         }
-        return "No se encontró el usuario con el ID: " + id;
+        return new ApiResponse<>("success", "User updated successfully", users.get(id));
     }
     @DeleteMapping("/{id}") //Mapea las solicitudes HTTP DELETE a deleteUser(), que elimina un usuario basado en su ID.
-    public String deleteUser(@PathVariable int id){
+    public ApiResponse<User> deleteUser(@PathVariable int id){
         if(id >= 0 && id < users.size()){
-            String user = users.remove(id);
-            return "Usuario: " + user + " eliminado.";
+            User user = users.remove(id);
+            return new ApiResponse<>("success", "User " + user.getName() + " deleted successfully", user);
         }else{
-            return "No se encontró el usuario con el ID: " + id;
+            return new ApiResponse<>("success", "User not found", null);
         }
     }
 }
