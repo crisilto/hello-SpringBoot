@@ -1,13 +1,13 @@
-package com.crisilto.userapp.users;
+package com.crisilto.userapp;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class UserappApplication {
+public class DemoApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(UserappApplication.class, args);
+		SpringApplication.run(DemoApplication.class, args);
 	}
 
 }
