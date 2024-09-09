@@ -1,45 +1,51 @@
 package com.crisilto.userapp.products;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.ArrayList;
-import java.util.List;
 
+import java.util.List;
+import java.util.Optional;
 @Service
 public class ProductService {
 
-    private List<Product> products = new ArrayList<Product>();
+    private final ProductRepository productRepository;
 
-    //Método para obtener todos los productos.
+    @Autowired //Inyectamos el repositorio de productos.
+    public ProductService(ProductRepository productRepository) {
+        this.productRepository = productRepository;
+    }
+
+    //Método para recuperar todos los productos de la base de datos.
     public List<Product> getAllProducts() {
-        return products;
+        return productRepository.findAll(); //Recuperamos los productos de la base de datos.
     }
 
     //Método para agregar un nuevo producto.
     public Product addProduct(String name, double price) {
-        Product product = new Product(products.size(), name, price); //Creamos un nuevo producto con ID único.
-        products.add(product); //Añadimos el producto a la lista.
-        return product;
+        Product product = new Product(name, price);
+        return productRepository.save(product); //Guardamos el nuevo producto en la base de datos.
     }
 
     //Método para actualizar un producto existente.
     public Product updateProduct(int id, String name, double price) {
-        for (Product product : products) {
-            if (product.getId() == id) {
-                product.setName(name);
-                product.setPrice(price);
-                return product;
-            }
+        Optional<Product> optionalProduct = productRepository.findById(id);
+        if (optionalProduct.isPresent()) {
+            Product product = optionalProduct.get();
+            product.setName(name);
+            product.setPrice(price);
+            return productRepository.save(product); //Guardamos los cambios en la base de datos.
+        } else {
+            return null; //Devolvemos null si el producto no existe.
         }
-        return null;
     }
 
     //Método para eliminar un producto existente.
     public boolean deleteProduct(int id) {
-        if (id >= 0 && id < products.size()) {
-            products.remove(id);
-            return true;
-        } else {
-            return false;
+        if(productRepository.existsById(id)){ //Verificamos si el producto existe por su ID.
+            productRepository.deleteById(id); //Eliminamos el producto por su ID.
+            return true; //Devolvemos true si el producto se ha eliminado correctamente.
+        }else{
+            return false; //Devolvemos false si el producto no existe.
         }
     }
 }
