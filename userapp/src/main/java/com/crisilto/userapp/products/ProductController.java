@@ -1,40 +1,46 @@
 package com.crisilto.userapp.products;
 
+import com.crisilto.userapp.ApiResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/products")
+@RequestMapping("/products") // Mapea todas las solicitudes que empiezan con /products a este controlador
 
 public class ProductController {
-    private List<String> products = new ArrayList<>();
+   private final ProductService productService;
+   @Autowired //Inyección de dependencias de ProductService
+   public ProductController(ProductService productService) {
+       this.productService = productService;
+   }
     @GetMapping()
-    public List<String> getAllProducts() {
-        return products;
+    public ApiResponse<List<Product>> getAllProducts() {
+        return new ApiResponse<>("success", "Products list obtained correctly", productService.getAllProducts());
     }
     @PostMapping()
-    public String addProduct(@RequestParam String product) {
-        products.add(product);
-        return "Product added: " + product;
+    public ApiResponse<Product> addProduct(@RequestParam String name, @RequestParam double price) {
+        Product product = productService.addProduct(name, price);
+        return new ApiResponse<>("success", "Products added correctly", product);
     }
-    @PutMapping()
-    public String updateProduct(@RequestParam String oldProduct, @RequestParam String newProduct) {
-        int index = products.indexOf(oldProduct);
-        if (index >= 0) {
-            products.set(index, newProduct);
-            return "Product updated: " + newProduct;
+    @PutMapping("/{id}") //Nos aseguramos de que se capture el parámetro ID de la ruta.
+    public ApiResponse<Product> updateProduct(@PathVariable int id, @RequestParam String name, @RequestParam double price) {
+        Product product = productService.updateProduct(id, name, price);
+        if(product != null) {
+            return new ApiResponse<>("success", "Product updated correctly", product);
+        }else{
+            return new ApiResponse<>("error", "Product not found", null);
         }
-        return "Product not found: " + oldProduct;
     }
-    @DeleteMapping()
-    public String deleteProduct(@RequestParam String product) {
-        int index = products.indexOf(product);
-        if (index >= 0) {
-            products.remove(index);
-            return "Product deleted: " + product;
+    @DeleteMapping("/{id}") //Nos aseguramos de que se capture el parámetro ID de la ruta.
+    public ApiResponse<Product> deleteProduct(@PathVariable int id) {
+        boolean isDeleted = productService.deleteProduct(id);
+        if(isDeleted) {
+            return new ApiResponse<>("success", "Product deleted correctly", null);
+        }else{
+            return new ApiResponse<>("error", "Product not found", null);
         }
-        return "Product not found: " + product;
-    }
+   }
 }
