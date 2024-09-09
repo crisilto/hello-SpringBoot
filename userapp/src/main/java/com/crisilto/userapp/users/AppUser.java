@@ -7,7 +7,7 @@ import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
 
 @Entity
-public class User {
+public class AppUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -17,8 +17,8 @@ public class User {
     private String name;
 
     //Constructores, getters y setters
-    public User(){}
-    public User(String name){
+    public AppUser(){}
+    public AppUser(String name){
         this.name = name;
     }
 

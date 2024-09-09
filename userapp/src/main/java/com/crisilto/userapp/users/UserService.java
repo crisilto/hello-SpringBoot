@@ -17,22 +17,22 @@ public class UserService {
     }
 
     //Método para obtener todos los usuarios.
-    public List<User> getAllUsers() {
+    public List<AppUser> getAllUsers() {
         return userRepository.findAll();
     }
 
     //Método para agregar un nuevo usuario.
-    public User addUser(String name) {
-        User user = new User(name); //Creamos un nuevo usuario con ID único.
-        return userRepository.save(user);
+    public AppUser addUser(String name) {
+        AppUser appUser = new AppUser(name); //Creamos un nuevo usuario con ID único.
+        return userRepository.save(appUser);
     }
     //Método para actualizar un usuario existente.
-    public User updateUser(int id, String name){
-        Optional<User> userOptional = userRepository.findById(id); //Buscamos el usuario por ID.
+    public AppUser updateUser(int id, String name){
+        Optional<AppUser> userOptional = userRepository.findById(id); //Buscamos el usuario por ID.
         if(userOptional.isPresent()){ //Verificamos si el usuario existe.
-            User user = userOptional.get();
-            user.setName(name); //Actualizamos el nombre del usuario.
-            return userRepository.save(user); //Guardamos los cambios en la base de datos.
+            AppUser appUser = userOptional.get();
+            appUser.setName(name); //Actualizamos el nombre del usuario.
+            return userRepository.save(appUser); //Guardamos los cambios en la base de datos.
         } else {
             return null; //Si el usuario no existe, retornamos null.
         }
