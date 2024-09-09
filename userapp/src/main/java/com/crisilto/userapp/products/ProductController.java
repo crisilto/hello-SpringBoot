@@ -2,9 +2,11 @@ package com.crisilto.userapp.products;
 
 import com.crisilto.userapp.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -20,7 +22,14 @@ public class ProductController {
     public ApiResponse<List<Product>> getAllProducts() {
         return new ApiResponse<>("success", "Products list obtained correctly", productService.getAllProducts());
     }
-    @PostMapping()
+
+    @GetMapping("/paged")
+    public ApiResponse<Page<Product>> getProductsPage(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Product> products = productService.getProductsPage(pageable);
+        return new ApiResponse<>("success", "Products list obtained correctly", products);
+    }
+
     public ApiResponse<Product> addProduct(@RequestParam String name, @RequestParam double price) {
         Product product = productService.addProduct(name, price);
         return new ApiResponse<>("success", "Products added correctly", product);
