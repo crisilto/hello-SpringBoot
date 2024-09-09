@@ -2,6 +2,9 @@ package com.crisilto.userapp.users;
 
 import com.crisilto.userapp.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,6 +27,14 @@ public class UserController {
     public ApiResponse<List<AppUser>> getAllUsers() {
         return new ApiResponse<>("success", "Usuers list obtained correctly", userService.getAllUsers());
     }
+
+    @GetMapping("/paged")
+    //Mapea las solicitudes HTTP GET a getUsersPage(), llamando al servicio para obtener una página de resultados.
+    public ApiResponse<Page<AppUser>> getUsersPage(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return new ApiResponse<>("success", "Users page obtained correctly", userService.getUsersPage(pageable));
+    }
+
     @PostMapping //Mapea las solicitudes HTTP POST a addUser(), llamando al servicio para agregar un nuevo usuario a la lista.
     public ApiResponse<AppUser> addUser(@RequestParam String name){
         AppUser appUser = userService.addUser(name);
