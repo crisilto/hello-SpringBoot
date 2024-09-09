@@ -1,43 +1,50 @@
 package com.crisilto.userapp.users;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.ArrayList;
+
 import java.util.List;
+import java.util.Optional;
 
 @Service //Marca la clase como un servicio gestionado por Spring.
 public class UserService {
 
-    private List<User> users = new ArrayList<>(); //Simulación de una base de datos en memoria.
+    private final UserRepository userRepository;
+
+    @Autowired
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     //Método para obtener todos los usuarios.
     public List<User> getAllUsers() {
-        return users;
+        return userRepository.findAll();
     }
 
     //Método para agregar un nuevo usuario.
     public User addUser(String name) {
-        User user = new User(users.size(), name); //Creamos un nuevo usuario con ID único.
-        users.add(user); //Añadimos el usuario a la lista.
-        return user;
+        User user = new User(name); //Creamos un nuevo usuario con ID único.
+        return userRepository.save(user);
     }
     //Método para actualizar un usuario existente.
     public User updateUser(int id, String name){
-        if(id >= 0 && id < users.size()) { //Verificamos si el ID es válido.
-            User user = users.get(id); //Obtenemos el usuario a actualizar.
+        Optional<User> userOptional = userRepository.findById(id); //Buscamos el usuario por ID.
+        if(userOptional.isPresent()){ //Verificamos si el usuario existe.
+            User user = userOptional.get();
             user.setName(name); //Actualizamos el nombre del usuario.
-            return user;
+            return userRepository.save(user); //Guardamos los cambios en la base de datos.
         } else {
-            return null; //Si el ID no es válido, retornamos null.
+            return null; //Si el usuario no existe, retornamos null.
         }
     }
 
     //Método para eliminar un usuario existente.
     public boolean deleteUser(int id){
-        if(id >= 0 && id < users.size()){ //Verificamos si el ID es válido.
-            users.remove(id); //Eliminamos el usuario de la lista.
+        if(userRepository.existsById(id)){
+            userRepository.deleteById(id);
             return true;
-        } else {
-            return false; //Si el ID no es válido, retornamos false.
+        }else{
+            return false;
         }
     }
 }
