@@ -28,10 +28,14 @@ public class UserController {
         return new ApiResponse<>("success", "Usuers list obtained correctly", userService.getAllUsers());
     }
 
-    @GetMapping("/paged")
+    @GetMapping("/paged") //Permite solicitar una página especíica de usuarios y el tamaño de esa página.
     //Mapea las solicitudes HTTP GET a getUsersPage(), llamando al servicio para obtener una página de resultados.
-    public ApiResponse<Page<AppUser>> getUsersPage(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
-        Pageable pageable = PageRequest.of(page, size);
+    public ApiResponse<Page<AppUser>> getUsersPage(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        //Pageable: Define el número de página y el tamaño de la página.
+        Pageable pageable = PageRequest.of(page, size); //Crea un objeto Pageable con los parámetros de paginación especificados.
         return new ApiResponse<>("success", "Users page obtained correctly", userService.getUsersPage(pageable));
     }
 
