@@ -29,4 +29,9 @@ public class GlobaLExceptionHandler {
     //@ExceptionHandler: Anotación que indica que el método manejará excepciones de un tipo específico.
     //MethodArgumentNotValidException: Maneja errores de validación, como cuando los datos de entrada no cumplen con las restricciones definidas.
     //Exception:  Captura cualquier excepción general que no esté manejada por otros métodos.
+
+    @ExceptionHandler(IdNotFoundException.class)
+    public ResponseEntity<String> handleUserNotFoundException(IdNotFoundException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
 }

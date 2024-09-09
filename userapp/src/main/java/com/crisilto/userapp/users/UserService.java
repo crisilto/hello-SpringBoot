@@ -1,5 +1,6 @@
 package com.crisilto.userapp.users;
 
+import com.crisilto.userapp.IdNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -36,7 +37,7 @@ public class UserService {
             appUser.setName(name); //Actualizamos el nombre del usuario.
             return userRepository.save(appUser); //Guardamos los cambios en la base de datos.
         } else {
-            return null; //Si el usuario no existe, retornamos null.
+            throw new IdNotFoundException("User with ID " + id + " does not exist.");
         }
     }
 
@@ -46,7 +47,7 @@ public class UserService {
             userRepository.deleteById(id);
             return true;
         }else{
-            return false;
+            throw new IdNotFoundException("User with ID " + id + " does not exist.");
         }
     }
 

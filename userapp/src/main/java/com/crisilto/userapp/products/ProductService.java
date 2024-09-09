@@ -1,5 +1,6 @@
 package com.crisilto.userapp.products;
 
+import com.crisilto.userapp.IdNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,7 +38,7 @@ public class ProductService {
             product.setPrice(price);
             return productRepository.save(product); //Guardamos los cambios en la base de datos.
         } else {
-            return null; //Devolvemos null si el producto no existe.
+            throw new IdNotFoundException("Product with ID " + id + " does not exist.");
         }
     }
 
@@ -47,7 +48,7 @@ public class ProductService {
             productRepository.deleteById(id); //Eliminamos el producto por su ID.
             return true; //Devolvemos true si el producto se ha eliminado correctamente.
         }else{
-            return false; //Devolvemos false si el producto no existe.
+            throw new IdNotFoundException("Product with ID " + id + " does not exist.");
         }
     }
 

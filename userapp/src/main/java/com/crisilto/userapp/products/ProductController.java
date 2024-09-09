@@ -29,7 +29,7 @@ public class ProductController {
         Page<Product> products = productService.getProductsPage(pageable);
         return new ApiResponse<>("success", "Products list obtained correctly", products);
     }
-    
+
     @PostMapping
     public ApiResponse<Product> addProduct(@RequestParam String name, @RequestParam double price) {
         Product product = productService.addProduct(name, price);
