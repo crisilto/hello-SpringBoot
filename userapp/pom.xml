@@ -69,6 +69,13 @@
 				<artifactId>spring-boot-starter-security</artifactId>
 			</dependency>
 
+			<!--Swagger es una herramienta popular para documentar APIs REST (genera automáticamente documentación interactiva).-->
+			<dependency>
+				<groupId>org.springdoc</groupId>
+				<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+				<version>2.1.0</version>
+			</dependency>
+
 		</dependencies>
 
 		<build>
