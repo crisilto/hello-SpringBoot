@@ -16,22 +16,30 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable())  //Deshabilita CSRF
+                .csrf(csrf -> csrf.disable()) //Deshabilita CSRF
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/h2-console/**").permitAll()  //Permite acceso a la consola H2
+                        .requestMatchers("/products/**", "/users/**").hasRole("USER") //Permite a usuarios con rol USER
+                        .requestMatchers("/products/delete/**", "/users/delete/**").hasRole("ADMIN") //Solo ADMIN puede eliminar
                         .anyRequest().authenticated()  //Requiere autenticación para todas las demás solicitudes
                 )
-                .httpBasic(withDefaults()); //Utiliza autenticación básica
+                .httpBasic(withDefaults());  //Utiliza autenticación básica
 
         return http.build();
     }
 
     @Bean
     public UserDetailsService userDetailsService() {
-        UserDetails user = User.withUsername("admin")
+        UserDetails user = User.withUsername("user")
                 .password("{noop}password") // "{noop}" indica que no se aplicará ningún algoritmo de encriptación
                 .roles("USER")
                 .build();
-        return new InMemoryUserDetailsManager(user);
+
+        UserDetails admin = User.withUsername("admin")
+                .password("{noop}password")
+                .roles("ADMIN")
+                .build();
+
+        return new InMemoryUserDetailsManager(user, admin);
     }
 }
