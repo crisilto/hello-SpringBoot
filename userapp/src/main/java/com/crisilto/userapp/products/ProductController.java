@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,11 +24,19 @@ public class ProductController {
         return new ApiResponse<>("success", "Products list obtained correctly", productService.getAllProducts());
     }
 
-    @GetMapping("/paged")
-    public ApiResponse<Page<Product>> getProductsPage(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Product> products = productService.getProductsPage(pageable);
-        return new ApiResponse<>("success", "Products list obtained correctly", products);
+    @GetMapping("/paged") //Nuevo endpoint que maneja solicitudes GET para obtener productos paginados.
+    public ApiResponse<Page<Product>> getProductsPage(
+            //Los @RequestParam son anotaciones que indican que estos parámetros se pueden pasar en la URL.
+            //Son los parámetros para:
+            @RequestParam(defaultValue = "0") int page, //La página
+            @RequestParam(defaultValue = "10") int size, //El tamaño de la página
+            @RequestParam(defaultValue = "name") String sortBy, //La propiedad por la que se ordena.
+            @RequestParam(defaultValue = "asc") String direction //La dirección en la que se ordena.
+            ) {
+        Sort sort = direction.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<Product> productsPage = productService.getProductsPage(pageable);
+        return new ApiResponse<>("success", "Page of products obtained correctly", productsPage);
     }
 
     @PostMapping
