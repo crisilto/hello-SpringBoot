@@ -3,6 +3,7 @@ package com.crisilto.tutorial;
 import com.crisilto.tutorial.models.Book;
 import com.crisilto.tutorial.models.Product;
 import com.crisilto.tutorial.models.UserData;
+import com.crisilto.tutorial.myBeans.MyBean;
 import com.crisilto.tutorial.services.OrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,8 +23,11 @@ public class Routes {
 
     //With dynamic dependencies would be like this:
     private OrderService orderService;
-    public Routes(OrderService orderService) {
+    private MyBean myBean;
+
+    public Routes(OrderService orderService, MyBean myBean) {
         this.orderService = orderService;
+        this.myBean = myBean;
     }
 
     @GetMapping("/hello")
@@ -54,6 +58,12 @@ public class Routes {
         //Setting the status code and response body.
         return ResponseEntity.status(HttpStatus.MOVED_PERMANENTLY)
                 .body("Learning status http in SpringBoot");
+    }
+
+    @GetMapping("/myBean")
+    public String greetFromBean() {
+        myBean.greet();
+        return "Greet from Bean successfully done.";
     }
 
     @GetMapping("/animals/{place}")
@@ -97,8 +107,8 @@ public class Routes {
 
     @PostMapping("/order")
     public String createOrder(@RequestBody List<Product> products) {
-        //
         orderService.saveOrder(products);
         return "Poducts saved successfully.";
     }
+
 }
