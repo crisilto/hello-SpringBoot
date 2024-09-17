@@ -1,11 +1,14 @@
 package com.crisilto.tutorial;
 
 import com.crisilto.tutorial.models.Book;
+import com.crisilto.tutorial.models.UserData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 public class Routes {
@@ -19,17 +22,17 @@ public class Routes {
 
     @GetMapping("/book/{id}/editorial/{editorial}")
     String readBook(@PathVariable int id, @PathVariable String editorial) {
-        return "Reading the book with id "+id+" editorial: "+editorial;
+        return "Reading the book with id " + id + " editorial: " + editorial;
     }
 
     @GetMapping("/book2/{id}")
     String readBook2(@PathVariable int id, @RequestParam String params) {
         //http://localhost:8080/book2/2?params=value (Replacing value with any value we want to pass as parameter)
-        return "Reading the book with id: "+id+" Params: "+params;
+        return "Reading the book with id: " + id + " Params: " + params;
     }
 
     @PostMapping("/book")
-    String saveBook(@RequestBody Book book){
+    String saveBook(@RequestBody Book book) {
         //Using POST-> http://localhost:8080/book {"name":"myBook","editorial":"myEditorial"}
         logger.debug("book{} editorial{}", book.name, book.editorial);
         return "Book saved";
@@ -43,20 +46,41 @@ public class Routes {
     }
 
     @GetMapping("/animals/{place}")
-    public ResponseEntity<String> getAnimals(@PathVariable String place){
+    public ResponseEntity<String> getAnimals(@PathVariable String place) {
         //http://localhost:8080/animals/forest
-        if(place.equals("mountain")) {
+        if (place.equals("mountain")) {
             return ResponseEntity.status(HttpStatus.OK).body("The animals in the mountain are: lions, elephants, and rhinos");
-        } else if(place.equals("forest")) {
+        } else if (place.equals("forest")) {
             return ResponseEntity.status(HttpStatus.OK).body("The animals in the forest are: squirrels, birds, and bears");
-        }else{
+        } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Place not valid");
         }
     }
 
     @GetMapping("/calculation/{number}")
-    public int getCalculation(@PathVariable int number){
+    public int getCalculation(@PathVariable int number) {
         //Simulate error
         throw new NullPointerException("Thrown when an application attempts to use null in a case where an object is required");
+    }
+
+    //Tedious way.
+    @GetMapping("/userData")
+    public ResponseEntity<String> getData() {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .header("Content-Type", "application/json")
+                .body("{\"name\":\"mary\"}");
+    }
+
+    //Easier way.
+    @GetMapping("/userData/v2")
+    public Map<String, Map<String, Object>> getUserDataV2() {
+        return Map.of("user", Map.of("name", "mary", "age", 26));
+    }
+
+    //Best way.
+    @GetMapping("/userData/v3")
+    public UserData getUserDataV3() {
+        return new UserData("mary", 26);
     }
 }
