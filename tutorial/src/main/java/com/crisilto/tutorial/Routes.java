@@ -81,6 +81,8 @@ public class Routes {
     //Best way.
     @GetMapping("/userData/v3")
     public UserData getUserDataV3() {
-        return new UserData("mary", 26);
+        return new UserData("mary", 26, "spain");
     }
+
+
 }
