@@ -1,19 +1,22 @@
 package com.crisilto.tutorial;
 
 import com.crisilto.tutorial.models.Book;
+import com.crisilto.tutorial.models.Product;
 import com.crisilto.tutorial.models.UserData;
+import com.crisilto.tutorial.services.OrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
 public class Routes {
     private final Logger logger = LoggerFactory.getLogger(Routes.class);
-
+    private OrderService orderService = new OrderService();
 
     @GetMapping("/hello")
     String myFirstRoute() {
@@ -84,5 +87,10 @@ public class Routes {
         return new UserData("mary", 26, "spain");
     }
 
-
+    @PostMapping("/order")
+    public String createOrder(@RequestBody List<Product> products) {
+        //
+        orderService.saveOrder(products);
+        return "Poducts saved successfully.";
+    }
 }
