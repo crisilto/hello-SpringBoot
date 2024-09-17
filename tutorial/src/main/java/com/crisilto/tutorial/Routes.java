@@ -4,6 +4,7 @@ import com.crisilto.tutorial.models.Book;
 import com.crisilto.tutorial.models.Product;
 import com.crisilto.tutorial.models.UserData;
 import com.crisilto.tutorial.myBeans.MyBean;
+import com.crisilto.tutorial.myBeans.MyComponent;
 import com.crisilto.tutorial.services.OrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,10 +25,12 @@ public class Routes {
     //With dynamic dependencies would be like this:
     private OrderService orderService;
     private MyBean myBean;
+    private MyComponent myComponent;
 
-    public Routes(OrderService orderService, MyBean myBean) {
+    public Routes(OrderService orderService, MyBean myBean, MyComponent myComponent) {
         this.orderService = orderService;
         this.myBean = myBean;
+        this.myComponent = myComponent;
     }
 
     @GetMapping("/hello")
@@ -62,8 +65,14 @@ public class Routes {
 
     @GetMapping("/myBean")
     public String greetFromBean() {
-        myBean.greet();
+        myBean.greetFromBean();
         return "Greet from Bean successfully done.";
+    }
+
+    @GetMapping("/myComponent")
+    public String greetFromComponent() {
+        myComponent.greetFromComponent();
+        return "Greet from Component successfully done.";
     }
 
     @GetMapping("/animals/{place}")
@@ -110,5 +119,4 @@ public class Routes {
         orderService.saveOrder(products);
         return "Poducts saved successfully.";
     }
-
 }
