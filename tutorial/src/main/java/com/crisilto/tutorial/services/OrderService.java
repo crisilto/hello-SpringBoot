@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
+@Service //This annotation turns our class into a service.
 public class OrderService {
     private final Logger logger = LoggerFactory.getLogger(OrderService.class);
 

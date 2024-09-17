@@ -16,7 +16,15 @@ import java.util.Map;
 @RestController
 public class Routes {
     private final Logger logger = LoggerFactory.getLogger(Routes.class);
-    private OrderService orderService = new OrderService();
+
+    //This is a hard dependency which is not a good practice for our code.
+    //private OrderService orderService = new OrderService();
+
+    //With dynamic dependencies would be like this:
+    private OrderService orderService;
+    public Routes(OrderService orderService) {
+        this.orderService = orderService;
+    }
 
     @GetMapping("/hello")
     String myFirstRoute() {
