@@ -19,7 +19,7 @@ public class MyFirstBeans {
 
     @Bean
     public IOrderService instanceOfOrderService(){
-        boolean isProduction = false;
+        boolean isProduction = true;
         if(isProduction){
             return new OrderService();
         }{
