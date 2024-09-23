@@ -27,8 +27,14 @@ public class Controllers {
     public Map<String, String> factorial(
             @RequestParam int number
     ){
-        return new HashMap<>(){{put("message", "Result: " +
-            operations.factorial(number)
-        );}};
+        try{
+            return new HashMap<>(){{put("message", "Result: " +
+                    operations.factorial(number)
+            );}};
+        }catch (ArithmeticException e) {
+            return new HashMap<>() {{
+                put("message", "Error: Invalid input");
+            }};
+        }
     }
 }
