@@ -10,14 +10,16 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@AutoConfigureWebTestClient
 @EnableAutoConfiguration(exclude = {
         DataSourceAutoConfiguration.class,
         DataSourceTransactionManagerAutoConfiguration.class,
@@ -31,7 +33,7 @@ public class OperationsController {
     private Operations operationsMock;
 
     @Autowired
-    private WebTestClient webTestClient;
+    private TestRestTemplate testRestTemplate;
 
     @BeforeEach
     public void setUp(){
@@ -44,13 +46,8 @@ public class OperationsController {
 
     @Test
     public void factorialControllerTest(){
-        webTestClient.get()
-                .uri("/factorial?number=5")
-                .exchange()
-                .expectStatus()
-                .isOk()
-                .expectBody()
-                .jsonPath("$.message")
-                .isEqualTo("Result: 0");
+        ResponseEntity<String> response = testRestTemplate.getForEntity("/factorial?number=5", String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).contains("Result: 0");
     }
 }
