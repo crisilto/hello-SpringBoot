@@ -2,10 +2,10 @@ package com.crisilto.crud.model;
 
 public class Book {
     public final long id;
-    public final String title;
+    public final String name;
 
-    public Book(long id, String title) {
+    public Book(long id, String name) {
         this.id = id;
-        this.title = title;
+        this.name = name;
     }
 }

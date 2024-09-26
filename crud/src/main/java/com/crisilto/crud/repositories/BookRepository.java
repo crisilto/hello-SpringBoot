@@ -42,9 +42,9 @@ public class BookRepository {
         public Book mapRow(ResultSet rs, int rowNum) throws SQLException {
             //Extracts the values from the "id" and "title" columns of the ResultSet and assigns them to the attributes of the Book object.
             long id = rs.getLong("id");
-            String title = rs.getString("title");
+            String name = rs.getString("name");
             //Returns a new Book object with the extracted values from the ResultSet.
-            return new Book(id, title);
+            return new Book(id, name);
         }
     }
 }
