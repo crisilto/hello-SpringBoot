@@ -15,4 +15,16 @@ public class BookService {
     public List<Book> getAllBooks() {
         return repository.getAllBooks();
     }
+
+    public long createBook(Book newBook) {
+        return repository.createBook(newBook);
+    }
+
+    public Book getBookById(long id) {
+        return repository.getBookById(id);
+    }
+
+    public Book updateBook(long id, Book updatedBook) {
+        return repository.updateBook(id, updatedBook);
+    }
 }
